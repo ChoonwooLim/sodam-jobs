@@ -1,11 +1,19 @@
 import { Navigate } from "react-router-dom";
 
+const ROLE_HIERARCHY = { user: 0, employer: 1, admin: 2, superadmin: 3 };
+
+function passesRole(userRole, required) {
+  const have = ROLE_HIERARCHY[userRole] ?? -1;
+  const need = ROLE_HIERARCHY[required] ?? 0;
+  return have >= need;
+}
+
 export default function ProtectedRoute({ children, requiredRole }) {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   if (!token) return <Navigate to="/login" replace />;
-  if (requiredRole && user?.role !== requiredRole && user?.role !== "superadmin") {
+  if (requiredRole && !passesRole(user?.role, requiredRole)) {
     return <Navigate to="/" replace />;
   }
   return children;
