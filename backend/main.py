@@ -108,10 +108,60 @@ def _seed_docs():
         print(f"[seed_docs] ERROR: {e}")
 
 
+def _ensure_postgis():
+    """Enable PostGIS extension. Fail loudly with clear instructions if no permission."""
+    from sqlmodel import Session
+    from sqlalchemy import text
+    with Session(database.engine) as session:
+        try:
+            session.exec(text("CREATE EXTENSION IF NOT EXISTS postgis"))
+            session.commit()
+            print("[migrate] PostGIS extension ready")
+        except Exception as e:
+            print(f"[migrate] PostGIS ERROR — manual install required: {e}")
+            print("  Run on Orbitron:")
+            print("    ssh stevenlim@192.168.219.101")
+            print("    sudo docker exec -it <pg-container> \\")
+            print("      psql -U orbitron_user -d orbitron_db -c 'CREATE EXTENSION postgis;'")
+            raise
+
+
+def _apply_user_migrations():
+    """ALTER user table to add nickname/phone/neighborhood (idempotent)."""
+    from sqlmodel import Session
+    from sqlalchemy import text
+    stmts = [
+        'ALTER TABLE "user" ADD COLUMN IF NOT EXISTS nickname VARCHAR',
+        'ALTER TABLE "user" ADD COLUMN IF NOT EXISTS phone VARCHAR',
+        'ALTER TABLE "user" ADD COLUMN IF NOT EXISTS neighborhood VARCHAR',
+    ]
+    with Session(database.engine) as session:
+        for s in stmts:
+            session.exec(text(s))
+        session.commit()
+        print("[migrate] user table columns ensured")
+
+
+def _ensure_geo_indexes():
+    """Create GiST index on Job.location for fast distance queries."""
+    from sqlmodel import Session
+    from sqlalchemy import text
+    with Session(database.engine) as session:
+        session.exec(text(
+            "CREATE INDEX IF NOT EXISTS idx_job_location "
+            "ON job USING GIST(location)"
+        ))
+        session.commit()
+        print("[migrate] GiST index idx_job_location ready")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     _copy_gallery_defaults()
-    create_db_and_tables()
+    _ensure_postgis()              # 1. extension first (Job needs Geography type)
+    _apply_user_migrations()       # 2. ALTER existing table
+    create_db_and_tables()         # 3. CREATE new tables (job, job_image)
+    _ensure_geo_indexes()          # 4. GiST index after job table exists
     _seed_admin()
     _seed_docs()
     yield
