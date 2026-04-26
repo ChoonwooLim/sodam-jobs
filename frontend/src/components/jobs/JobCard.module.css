@@ -1,0 +1,110 @@
+.card {
+  display: flex;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+  color: inherit;
+}
+
+.thumb {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-elev);
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-mute);
+  font-size: 0.825rem;
+  background: var(--color-line-soft);
+}
+
+.verifiedBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: var(--color-warm);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metaRow {
+  display: flex;
+  gap: 6px;
+  font-size: 0.825rem;
+  color: var(--color-ink-mute);
+}
+.dot { color: var(--color-line); }
+
+.payRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 2px;
+}
+.payType {
+  font-size: 0.825rem;
+  color: var(--color-ink-soft);
+}
+.payAmount {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.tagRow {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.tag {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+.tagMute {
+  background: var(--color-line);
+  color: var(--color-ink-mute);
+}

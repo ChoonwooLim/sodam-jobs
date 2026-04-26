@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function LoginPage() {
     }
   }, [navigate]);
 
-  const resetForm = () => { setUsername(""); setEmail(""); setPassword(""); setError(""); };
+  const resetForm = () => { setUsername(""); setEmail(""); setPassword(""); setRole("user"); setError(""); };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +28,9 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
-      const body = mode === "login" ? { username, password } : { username, email, password };
+      const body = mode === "login"
+        ? { username, password }
+        : { username, email, password, role };
       const { data } = await api.post(endpoint, body);
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -64,6 +67,19 @@ export default function LoginPage() {
               <div className={styles.inputGroup}>
                 <input className={`${styles.input} ${email ? styles.inputFilled : ""}`} type="email" id="login-email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
                 <label className={styles.label} htmlFor="login-email">Email</label>
+              </div>
+            )}
+            {!isLogin && (
+              <div className={styles.roleRow}>
+                <span className={styles.roleLabel}>역할</span>
+                <label className={styles.roleOption}>
+                  <input type="radio" name="role" value="user" checked={role === "user"} onChange={(e) => setRole(e.target.value)} />
+                  알바생
+                </label>
+                <label className={styles.roleOption}>
+                  <input type="radio" name="role" value="employer" checked={role === "employer"} onChange={(e) => setRole(e.target.value)} />
+                  사장님
+                </label>
               </div>
             )}
             <div className={styles.inputGroup}>

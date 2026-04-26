@@ -11,7 +11,7 @@ router = APIRouter()
 
 # Empty-string defense: Path("") resolves to CWD.
 _env_upload = os.getenv("UPLOAD_DIR", "").strip()
-UPLOAD_DIR = Path(_env_upload) if _env_upload else Path(__file__).resolve().parent.parent / "uploads"
+UPLOAD_DIR = Path(_env_upload) if _env_upload else Path(__file__).resolve().parent.parent.parent / "uploads"
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
 MAX_VIDEO_SIZE = 100 * 1024 * 1024
 

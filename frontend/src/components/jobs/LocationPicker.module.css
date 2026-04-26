@@ -1,0 +1,81 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 17, 15, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: var(--sp-4);
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+}
+
+.title {
+  font-size: 1.25rem;
+  margin-bottom: var(--sp-2);
+}
+.help {
+  font-size: 0.875rem;
+  color: var(--color-ink-mute);
+  margin-bottom: var(--sp-4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.geoBtn {
+  padding: var(--sp-3);
+  background: var(--color-warm-soft);
+  border: 1px dashed var(--color-warm);
+  border-radius: var(--radius-md);
+  color: var(--color-warm);
+  font-weight: 500;
+}
+.geoBtn:hover { background: var(--color-warm); color: #fff; }
+.geoBtn:disabled { opacity: 0.6; cursor: progress; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.825rem;
+  color: var(--color-ink-mute);
+}
+.field input {
+  padding: var(--sp-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-elev);
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+.field input:focus { outline: none; border-color: var(--color-accent); background: var(--color-surface); }
+
+.error { color: var(--color-danger); font-size: 0.875rem; margin: 0; }
+
+.actions {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: flex-end;
+  margin-top: var(--sp-3);
+}
+.cancel, .save {
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  font-weight: 500;
+}
+.cancel { background: var(--color-surface); color: var(--color-ink); }
+.save { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+.save:hover { background: var(--color-accent-ink); }

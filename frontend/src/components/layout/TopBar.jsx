@@ -4,6 +4,7 @@ import styles from "./TopBar.module.css";
 
 const NAV_ITEMS = [
   { label: "홈", path: "/" },
+  { label: "알바", path: "/jobs" },
   { label: "회사소개", path: "/about" },
   { label: "서비스", path: "/services" },
   { label: "커뮤니티", path: "/community/notice" },
@@ -44,6 +45,11 @@ export default function TopBar() {
           {isAdmin && (
             <Link to="/admin" className={`${styles.navLink} ${isActive("/admin") ? styles.active : ""}`} onClick={() => setMenuOpen(false)}>
               관리자
+            </Link>
+          )}
+          {user && (user.role === "employer" || user.role === "admin" || user.role === "superadmin") && (
+            <Link to="/my/jobs" className={`${styles.navLink} ${isActive("/my/jobs") ? styles.active : ""}`} onClick={() => setMenuOpen(false)}>
+              내 알바
             </Link>
           )}
         </nav>

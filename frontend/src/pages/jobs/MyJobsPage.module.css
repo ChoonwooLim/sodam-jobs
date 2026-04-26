@@ -1,0 +1,78 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--sp-3);
+}
+
+.title { font-size: 1.5rem; }
+
+.postBtn {
+  padding: var(--sp-2) var(--sp-5);
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+.postBtn:hover { background: var(--color-accent-ink); color: #fff; }
+
+.empty {
+  padding: var(--sp-7);
+  text-align: center;
+  color: var(--color-ink-mute);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.table th, .table td {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.9rem;
+}
+.table th {
+  background: var(--color-surface-elev);
+  color: var(--color-ink-soft);
+  font-weight: 600;
+  font-size: 0.825rem;
+  text-transform: uppercase;
+}
+.table tr:last-child td { border-bottom: none; }
+
+.statusBtn {
+  padding: 4px var(--sp-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.statusOn { background: var(--color-success); color: #fff; }
+.statusOff { background: var(--color-line); color: var(--color-ink-soft); }
+
+.actionsCell {
+  display: flex;
+  gap: var(--sp-2);
+}
+.editLink {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+}
+.deleteBtn {
+  font-size: 0.85rem;
+  color: var(--color-danger);
+}
