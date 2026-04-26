@@ -27,7 +27,7 @@ COPY docs/ /app/docs/
 ENV DOCS_DIR=/app/docs
 
 # Default environment variables — override via Orbitron dashboard
-ENV DATABASE_URL=postgresql://orbitron_user:orbitron_db_pass@orbitron-sodam-jobs-db:3101/orbitron_db
+ENV DATABASE_URL=postgresql://orbitron_user:orbitron_db_pass@orbitron-sodam-jobs-db:5432/orbitron_db
 ENV SECRET_KEY=sodamjobs-jwt-secret-key-2026
 ENV FRONTEND_URL=https://sodam-jobs.twinverse.org
 ENV UPLOAD_DIR=/app/uploads
