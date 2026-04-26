@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 import database
 from database import create_db_and_tables
-from routers import auth, admin, docs, skills, plugins, boards, comments, files
+from routers import auth, admin, docs, skills, plugins, boards, comments, files, jobs
 
 
 def _get_uploads_dir() -> Path:
@@ -188,6 +188,7 @@ app.include_router(plugins.router, prefix="/api/plugins", tags=["plugins"])
 app.include_router(boards.router, prefix="/api/boards", tags=["boards"])
 app.include_router(comments.router, prefix="/api/comments", tags=["comments"])
 app.include_router(files.router, prefix="/api/files", tags=["files"])
+app.include_router(jobs.router, prefix="/api/jobs", tags=["jobs"])
 
 
 @app.get("/health")
