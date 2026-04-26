@@ -1,7 +1,7 @@
 import { JOB_CATEGORIES, PAY_TYPES } from "../../lib/jobConstants";
 import styles from "./JobFilters.module.css";
 
-export default function JobFilters({ value, onChange }) {
+export default function JobFilters({ value = {}, onChange }) {
   // value shape: { category, pay_type, pay_min, radius_km, q }
   const update = (patch) => onChange({ ...value, ...patch });
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./LocationPicker.module.css";
 
 const LS_KEY = "userLocation";
@@ -28,6 +28,15 @@ export default function LocationPicker({ initial, onSave, onClose }) {
   const [neighborhood, setNeighborhood] = useState(start.neighborhood ?? "");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const firstInputRef = useRef(null);
+
+  // Move focus into the modal on mount + close on Escape (a11y minimums)
+  useEffect(() => {
+    firstInputRef.current?.focus();
+    const onKey = (e) => { if (e.key === "Escape") onClose?.(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   const useCurrent = () => {
     if (!navigator.geolocation) {
@@ -69,8 +78,14 @@ export default function LocationPicker({ initial, onSave, onClose }) {
 
   return (
     <div className={styles.backdrop} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2 className={styles.title}>내 위치 설정</h2>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="location-picker-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className={styles.title} id="location-picker-title">내 위치 설정</h2>
         <p className={styles.help}>
           가까운 알바를 보려면 위치가 필요합니다. 현재 위치 버튼을 누르거나 직접 좌표를 입력하세요.
         </p>
@@ -83,6 +98,7 @@ export default function LocationPicker({ initial, onSave, onClose }) {
           <label className={styles.field}>
             <span>위도 (lat)</span>
             <input
+              ref={firstInputRef}
               type="number"
               step="any"
               value={lat}
