@@ -152,3 +152,25 @@
   .brand { padding: var(--sp-5) var(--sp-5); }
   .brandLogo { font-size: 2rem; }
 }
+
+.roleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-2) 0;
+}
+.roleLabel {
+  font-size: 0.85rem;
+  color: var(--color-ink-mute);
+  margin-right: var(--sp-2);
+}
+.roleOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.roleOption input[type="radio"] {
+  accent-color: var(--color-warm);
+}
