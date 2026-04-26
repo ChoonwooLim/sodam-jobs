@@ -1,0 +1,71 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--sp-3);
+}
+
+.title {
+  font-size: 1.75rem;
+  margin-bottom: var(--sp-2);
+}
+
+.locationLine {
+  font-size: 0.875rem;
+  color: var(--color-ink-mute);
+}
+.locLink {
+  color: var(--color-accent);
+  text-decoration: underline;
+  font-size: inherit;
+  padding: 0;
+}
+
+.postBtn {
+  background: var(--color-accent);
+  color: #fff;
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.postBtn:hover { background: var(--color-accent-ink); color: #fff; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--sp-3);
+}
+
+.empty {
+  padding: var(--sp-7);
+  text-align: center;
+  color: var(--color-ink-mute);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-lg);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+.pagination button {
+  padding: 6px var(--sp-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.pagination button:disabled { color: var(--color-ink-mute); cursor: not-allowed; }
