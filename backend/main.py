@@ -118,7 +118,7 @@ def _ensure_postgis():
             session.commit()
             print("[migrate] PostGIS extension ready")
         except Exception as e:
-            print(f"[migrate] PostGIS ERROR — manual install required: {e}")
+            print(f"[migrate] PostGIS ERROR -- manual install required: {e}")
             print("  Run on Orbitron:")
             print("    ssh stevenlim@192.168.219.101")
             print("    sudo docker exec -it <pg-container> \\")
