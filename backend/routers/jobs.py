@@ -21,11 +21,6 @@ router = APIRouter()
 _env_upload = os.getenv("UPLOAD_DIR", "").strip()
 JOB_UPLOAD_DIR = Path(_env_upload) if _env_upload else Path(__file__).resolve().parent.parent.parent / "uploads"
 
-VALID_PAY_TYPES = ("hourly", "daily", "monthly")
-VALID_CATEGORIES = ("hall", "kitchen", "cvs", "cafe", "delivery", "etc")
-VALID_STATUS = ("active", "closed", "expired")
-
-
 class JobCreate(BaseModel):
     title: str
     description: str = ""
@@ -315,21 +310,26 @@ def delete_job(
         raise HTTPException(status_code=404, detail="Job not found")
     _check_owner_or_admin(job, user)
 
+    # Order: collect filenames -> delete children + flush -> delete parent -> commit -> unlink.
+    # The flush() between child and parent deletes is required because Job <-> JobImage
+    # have only a DB-level FK (no SQLAlchemy relationship), so the unit-of-work cannot
+    # infer DELETE ordering and would otherwise hit FK violation on commit.
+    # Disk unlink runs AFTER commit so a commit failure can't leave files orphaned.
     images = session.exec(select(JobImage).where(JobImage.job_id == job_id)).all()
+    filenames_to_unlink = [Path(img.stored_path).name for img in images]
     for img in images:
-        # stored_path is "/uploads/<filename>"; resolve to disk path via JOB_UPLOAD_DIR
-        # (defined at module top in sub-task 8)
-        filename = Path(img.stored_path).name
-        disk_path = JOB_UPLOAD_DIR / filename
+        session.delete(img)
+    session.flush()
+    session.delete(job)
+    session.commit()
+
+    for fn in filenames_to_unlink:
+        disk_path = JOB_UPLOAD_DIR / fn
         if disk_path.is_file():
             try:
                 disk_path.unlink()
             except OSError as e:
                 print(f"[jobs.delete] could not unlink {disk_path}: {e}")
-        session.delete(img)
-
-    session.delete(job)
-    session.commit()
     return {"status": "deleted"}
 
 
@@ -406,14 +406,15 @@ def delete_job_image(
     if not img or img.job_id != job_id:
         raise HTTPException(status_code=404, detail="Image not found")
 
+    # Same order as delete_job: DB delete first, commit, then unlink.
     filename = Path(img.stored_path).name
+    session.delete(img)
+    session.commit()
+
     disk_path = JOB_UPLOAD_DIR / filename
     if disk_path.is_file():
         try:
             disk_path.unlink()
         except OSError as e:
             print(f"[jobs.delete_image] could not unlink {disk_path}: {e}")
-
-    session.delete(img)
-    session.commit()
     return {"status": "deleted"}
