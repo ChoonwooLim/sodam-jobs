@@ -1,0 +1,87 @@
+.page {
+  max-width: 880px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.docHeader {
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--sp-4);
+}
+
+.overline {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  margin-bottom: 6px;
+}
+
+.title { font-size: 1.85rem; }
+
+.hint {
+  color: var(--color-ink-mute);
+  padding: var(--sp-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-line);
+  text-align: center;
+}
+
+.content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--color-ink);
+}
+.content :global(h1) { font-size: 1.6rem; margin: var(--sp-5) 0 var(--sp-3); border-bottom: 1px solid var(--color-line); padding-bottom: var(--sp-2); }
+.content :global(h2) { font-size: 1.3rem; margin: var(--sp-5) 0 var(--sp-3); color: var(--color-accent-ink); }
+.content :global(h3) { font-size: 1.1rem; margin: var(--sp-4) 0 var(--sp-2); }
+.content :global(p) { margin: 0 0 var(--sp-3); }
+.content :global(ul), .content :global(ol) { padding-left: var(--sp-5); margin: 0 0 var(--sp-3); }
+.content :global(blockquote) {
+  border-left: 3px solid var(--color-warm);
+  padding-left: var(--sp-4);
+  color: var(--color-ink-soft);
+  margin: var(--sp-3) 0;
+}
+.content :global(hr) {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: var(--sp-5) 0;
+}
+.content :global(code) {
+  background: var(--color-surface-elev);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+.content :global(pre) {
+  background: var(--color-ink);
+  color: #f5f1ea;
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+.content :global(pre code) {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+.content :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--sp-4) 0;
+}
+.content :global(th), .content :global(td) {
+  border: 1px solid var(--color-line);
+  padding: var(--sp-2) var(--sp-3);
+  text-align: left;
+}
+.content :global(th) { background: var(--color-surface-elev); }

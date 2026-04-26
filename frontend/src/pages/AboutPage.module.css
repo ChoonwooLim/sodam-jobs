@@ -1,0 +1,43 @@
+.about {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.title {
+  font-size: 2.25rem;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--sp-3);
+}
+
+.section h2 {
+  font-size: 1.25rem;
+  margin-bottom: var(--sp-2);
+  color: var(--color-accent-ink);
+}
+.section p {
+  color: var(--color-ink-soft);
+  line-height: 1.7;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.timeline li {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--color-surface);
+  border-left: 3px solid var(--color-warm);
+  border-radius: var(--radius-sm);
+}
+.timeline strong {
+  color: var(--color-accent-ink);
+  margin-right: var(--sp-2);
+}

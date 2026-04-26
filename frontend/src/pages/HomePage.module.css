@@ -1,0 +1,107 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-7);
+  padding: var(--sp-6) var(--sp-5);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  padding: var(--sp-8) var(--sp-5);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-warm-soft) 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+}
+.heroTitle {
+  font-size: 3rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--sp-3);
+}
+.heroSub {
+  font-size: 1.15rem;
+  color: var(--color-ink-soft);
+  margin-bottom: var(--sp-6);
+}
+.heroCta {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.primaryBtn {
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+.primaryBtn:hover { background: var(--color-accent-ink); color: #fff; }
+.secondaryBtn {
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+.secondaryBtn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.sectionTitle {
+  font-size: 1.5rem;
+}
+.moreLink {
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+}
+
+.noticeList, .postList {
+  list-style: none;
+  margin: 0; padding: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+.noticeItem, .postItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-line-soft);
+}
+.noticeList li:last-child .noticeItem,
+.postList li:last-child .postItem { border-bottom: none; }
+.noticeTitle { flex: 1; }
+.noticeDate { font-size: 0.85rem; color: var(--color-ink-mute); }
+.postMeta { font-size: 0.85rem; color: var(--color-ink-mute); }
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--sp-4);
+}
+.serviceCard {
+  padding: var(--sp-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+.serviceCard h3 { margin-bottom: var(--sp-2); }
+.serviceCard p { color: var(--color-ink-soft); }
+
+@media (max-width: 640px) {
+  .heroTitle { font-size: 2rem; }
+}

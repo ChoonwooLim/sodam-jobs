@@ -1,0 +1,6 @@
+/* Bridge / overrides — global.css carries the design tokens. */
+
+body {
+  min-height: 100vh;
+  background: var(--color-bg);
+}

@@ -1,41 +1,46 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Node
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Vite / React
+frontend/dist/
 
-# vercel
-.vercel
+# Environment
+.env
+.env.local
+.env.*.local
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Uploads (사용자 업로드는 무시, 샘플 갤러리 이미지는 추적)
+uploads/*
+!uploads/gallery-*.jpg
+
+# Logs
+*.log
+
+# Claude runtime
+.claude/*.lock

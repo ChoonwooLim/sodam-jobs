@@ -1,0 +1,103 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.title { font-size: 1.75rem; }
+
+.subtitle {
+  color: var(--color-ink-mute);
+  font-size: 0.9rem;
+  margin-bottom: var(--sp-3);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--sp-5);
+  min-height: 500px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.skillBtn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--color-line-soft);
+  transition: background 0.12s ease;
+}
+.skillBtn:hover { background: var(--color-surface-elev); }
+.skillBtn.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+  border-left: 3px solid var(--color-accent);
+}
+
+.skillName {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+.skillDesc {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  overflow-y: auto;
+  max-height: 600px;
+}
+.detail h2 {
+  font-size: 1.4rem;
+  margin-bottom: var(--sp-3);
+}
+.detailDesc {
+  color: var(--color-ink-soft);
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.body {
+  background: var(--color-surface-elev);
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--color-ink-soft);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.hint {
+  color: var(--color-ink-mute);
+  text-align: center;
+  padding: var(--sp-7);
+}
+
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+}

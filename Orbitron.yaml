@@ -1,0 +1,68 @@
+# ============================================================
+# SodamJobs — Orbitron 배포 설정
+# ============================================================
+# Build: 멀티스테이지 Dockerfile (자동 감지)
+#   Stage 1: Node 20 → frontend 빌드 (npm ci + vite build)
+#   Stage 2: Python 3.12 → backend + static 서빙 (uvicorn)
+# ============================================================
+
+build:
+  dockerfile: Dockerfile
+start:
+  command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+port: 8000
+
+healthcheck:
+  path: /health
+  interval: 30
+  timeout: 10
+
+env:
+  - key: DATABASE_URL
+    description: "PostgreSQL 연결 URL (Docker 내부 주소)"
+    required: true
+    sync: false
+
+  - key: SECRET_KEY
+    description: "JWT 토큰 서명 키 (최소 32자 랜덤 문자열)"
+    required: true
+    sync: false
+
+  - key: SUPERADMIN_USERNAME
+    value: "admin"
+    sync: true
+
+  - key: SUPERADMIN_PASSWORD
+    required: true
+    sync: false
+
+  - key: VITE_API_URL
+    value: ""
+    sync: true
+
+  - key: FRONTEND_URL
+    description: "CORS 허용 오리진 (예: https://sodam-jobs.twinverse.org)"
+    sync: false
+
+  - key: UPLOAD_DIR
+    value: "/app/uploads"
+    sync: true
+
+  - key: DOCS_DIR
+    value: "/app/docs"
+    sync: true
+
+volumes:
+  - path: /app/uploads
+    description: "사용자 업로드 파일 영속 저장"
+
+# ============================================================
+# 트러블슈팅
+# ============================================================
+# 문서/게시글 404         → /health 응답에서 DB 연결 확인
+# documents=0             → DATABASE_URL 확인
+# 이미지 안보임 / files=0 → uploads/ 볼륨 마운트 확인
+# 로그인 실패             → SECRET_KEY 확인
+# CORS 에러               → FRONTEND_URL 확인
+# ============================================================
