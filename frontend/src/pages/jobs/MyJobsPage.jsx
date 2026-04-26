@@ -66,12 +66,18 @@ export default function MyJobsPage() {
                 <td>{JOB_CATEGORIES[j.category] || j.category}</td>
                 <td>{PAY_TYPES[j.pay_type]} {formatKRW(j.pay_amount)}</td>
                 <td>
-                  <button
-                    className={`${styles.statusBtn} ${j.status === "active" ? styles.statusOn : styles.statusOff}`}
-                    onClick={() => toggleStatus(j)}
-                  >
-                    {JOB_STATUS_LABELS[j.status] || j.status}
-                  </button>
+                  {j.status === "expired" ? (
+                    <span className={`${styles.statusBtn} ${styles.statusOff}`}>
+                      {JOB_STATUS_LABELS.expired}
+                    </span>
+                  ) : (
+                    <button
+                      className={`${styles.statusBtn} ${j.status === "active" ? styles.statusOn : styles.statusOff}`}
+                      onClick={() => toggleStatus(j)}
+                    >
+                      {JOB_STATUS_LABELS[j.status] || j.status}
+                    </button>
+                  )}
                 </td>
                 <td>{j.view_count}</td>
                 <td>{new Date(j.created_at).toLocaleDateString("ko-KR")}</td>
