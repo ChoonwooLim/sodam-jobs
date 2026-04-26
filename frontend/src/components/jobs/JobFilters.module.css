@@ -1,0 +1,57 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+}
+
+.tabRow {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 6px var(--sp-3);
+  font-size: 0.875rem;
+  background: var(--color-surface-elev);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+}
+.tab:hover { border-color: var(--color-ink-soft); }
+.tabActive {
+  background: var(--color-ink);
+  color: #fff;
+  border-color: var(--color-ink);
+  font-weight: 600;
+}
+
+.detailRow {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.825rem;
+  color: var(--color-ink-mute);
+  min-width: 110px;
+}
+.fieldGrow { flex: 1; min-width: 200px; }
+.field input, .field select {
+  padding: 6px var(--sp-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: 0.9rem;
+  color: var(--color-ink);
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
