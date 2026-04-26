@@ -1,15 +1,29 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+import JobCard from "../components/jobs/JobCard";
+import { getSavedLocation } from "../components/jobs/LocationPicker";
 import styles from "./HomePage.module.css";
 
 export default function HomePage() {
   const [notices, setNotices] = useState([]);
   const [recentPosts, setRecentPosts] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [hasLocation] = useState(() => Boolean(getSavedLocation()));
 
   useEffect(() => {
     api.get("/api/boards/notice?size=3").then((r) => setNotices(r.data.items)).catch(() => {});
     api.get("/api/boards/qna?size=5").then((r) => setRecentPosts(r.data.items)).catch(() => {});
+    const loc = getSavedLocation();
+    const params = new URLSearchParams({ size: "3" });
+    if (loc) {
+      params.set("lat", loc.lat);
+      params.set("lng", loc.lng);
+      params.set("radius_km", "5");
+    }
+    api.get(`/api/jobs?${params.toString()}`)
+      .then((r) => setJobs(r.data.items))
+      .catch(() => {});
   }, []);
 
   return (
@@ -21,6 +35,26 @@ export default function HomePage() {
           <Link to="/services" className={styles.primaryBtn}>서비스 알아보기</Link>
           <Link to="/about" className={styles.secondaryBtn}>회사 소개</Link>
         </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>
+            {hasLocation ? "내 동네 알바" : "최신 알바"}
+          </h2>
+          <Link to="/jobs" className={styles.moreLink}>더보기</Link>
+        </div>
+        {jobs.length > 0 ? (
+          <div className={styles.jobsPreview}>
+            {jobs.map((j) => <JobCard key={j.id} job={j} />)}
+          </div>
+        ) : (
+          <p className={styles.jobsEmpty}>
+            {hasLocation
+              ? "주변에 등록된 알바가 없습니다."
+              : <><Link to="/jobs">내 위치를 설정</Link>하면 가까운 알바를 보여드립니다.</>}
+          </p>
+        )}
       </section>
 
       {notices.length > 0 && (

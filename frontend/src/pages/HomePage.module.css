@@ -105,3 +105,19 @@
 @media (max-width: 640px) {
   .heroTitle { font-size: 2rem; }
 }
+
+.jobsPreview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--sp-3);
+}
+
+.jobsEmpty {
+  padding: var(--sp-5);
+  text-align: center;
+  color: var(--color-ink-mute);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-md);
+}
+.jobsEmpty a { font-weight: 600; }

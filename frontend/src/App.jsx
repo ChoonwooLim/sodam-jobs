@@ -13,6 +13,10 @@ import AdminBoards from "./pages/admin/AdminBoards";
 import AdminDocs from "./pages/admin/AdminDocs";
 import AdminSkills from "./pages/admin/AdminSkills";
 import AdminPlugins from "./pages/admin/AdminPlugins";
+import JobListPage from "./pages/jobs/JobListPage";
+import JobDetailPage from "./pages/jobs/JobDetailPage";
+import JobFormPage from "./pages/jobs/JobFormPage";
+import MyJobsPage from "./pages/jobs/MyJobsPage";
 
 export default function App() {
   return (
@@ -24,6 +28,13 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Jobs */}
+          <Route path="/jobs" element={<JobListPage />} />
+          <Route path="/jobs/new" element={<ProtectedRoute requiredRole="employer"><JobFormPage /></ProtectedRoute>} />
+          <Route path="/jobs/:id" element={<JobDetailPage />} />
+          <Route path="/jobs/:id/edit" element={<ProtectedRoute requiredRole="employer"><JobFormPage /></ProtectedRoute>} />
+          <Route path="/my/jobs" element={<ProtectedRoute requiredRole="employer"><MyJobsPage /></ProtectedRoute>} />
 
           {/* Community */}
           <Route path="/community/:boardType" element={<BoardPage />} />
