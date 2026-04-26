@@ -17,6 +17,7 @@ import JobListPage from "./pages/jobs/JobListPage";
 import JobDetailPage from "./pages/jobs/JobDetailPage";
 import JobFormPage from "./pages/jobs/JobFormPage";
 import MyJobsPage from "./pages/jobs/MyJobsPage";
+import MobilePreviewPage from "./pages/MobilePreviewPage";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/mobile-preview" element={<MobilePreviewPage />} />
 
           {/* Jobs */}
           <Route path="/jobs" element={<JobListPage />} />

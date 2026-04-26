@@ -5,6 +5,7 @@ import styles from "./TopBar.module.css";
 const NAV_ITEMS = [
   { label: "홈", path: "/" },
   { label: "알바", path: "/jobs" },
+  { label: "모바일", path: "/mobile-preview" },
   { label: "회사소개", path: "/about" },
   { label: "서비스", path: "/services" },
   { label: "커뮤니티", path: "/community/notice" },
