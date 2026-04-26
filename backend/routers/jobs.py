@@ -120,3 +120,129 @@ def list_my_jobs(
                 thumbs[jid] = path
 
     return [_serialize_job(j, thumbnail=thumbs.get(j.id)) for j in jobs]
+
+
+@router.get("")
+def list_jobs(
+    lat: Optional[float] = None,
+    lng: Optional[float] = None,
+    radius_km: float = 5.0,
+    category: Optional[str] = None,
+    pay_type: Optional[str] = None,
+    pay_min: Optional[int] = None,
+    q: Optional[str] = None,
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    session: Session = Depends(get_session),
+):
+    """Public job list. With lat/lng → distance-sorted within radius_km. Else newest-first."""
+    offset = (page - 1) * size
+    radius_m = radius_km * 1000.0
+    has_geo = lat is not None and lng is not None
+
+    where_clauses = ["status = 'active'"]
+    params: dict = {}
+
+    if has_geo:
+        where_clauses.append(
+            "ST_DWithin(location, ST_MakePoint(:lng, :lat)::geography, :radius_m)"
+        )
+        params["lng"] = lng
+        params["lat"] = lat
+        params["radius_m"] = radius_m
+
+    if category:
+        where_clauses.append("category = :category")
+        params["category"] = category
+    if pay_type:
+        where_clauses.append("pay_type = :pay_type")
+        params["pay_type"] = pay_type
+    if pay_min is not None:
+        where_clauses.append("pay_amount >= :pay_min")
+        params["pay_min"] = pay_min
+    if q:
+        where_clauses.append("(title ILIKE :q_like OR description ILIKE :q_like)")
+        params["q_like"] = f"%{q}%"
+
+    where_sql = " AND ".join(where_clauses)
+
+    count_sql = f"SELECT COUNT(*) FROM job WHERE {where_sql}"
+    total = session.exec(text(count_sql).bindparams(**params)).scalar_one()
+
+    if has_geo:
+        select_sql = (
+            "SELECT id, "
+            "ST_Distance(location, ST_MakePoint(:lng, :lat)::geography) AS distance_m "
+            f"FROM job WHERE {where_sql} "
+            "ORDER BY distance_m ASC "
+            "LIMIT :size OFFSET :offset"
+        )
+    else:
+        select_sql = (
+            "SELECT id, NULL::float AS distance_m "
+            f"FROM job WHERE {where_sql} "
+            "ORDER BY created_at DESC "
+            "LIMIT :size OFFSET :offset"
+        )
+    params["size"] = size
+    params["offset"] = offset
+
+    rows = session.exec(text(select_sql).bindparams(**params)).all()
+    if not rows:
+        return {"items": [], "total": total, "page": page, "size": size}
+
+    job_ids = [r[0] for r in rows]
+    distance_map = {r[0]: r[1] for r in rows}
+
+    jobs = session.exec(select(Job).where(col(Job.id).in_(job_ids))).all()
+    jobs_by_id = {j.id: j for j in jobs}
+
+    thumbs: dict[int, str] = {}
+    img_rows = session.exec(
+        select(JobImage.job_id, JobImage.stored_path)
+        .where(col(JobImage.job_id).in_(job_ids))
+        .order_by(col(JobImage.job_id), col(JobImage.sort_order))
+    ).all()
+    for jid, path in img_rows:
+        if jid not in thumbs:
+            thumbs[jid] = path
+
+    items = [
+        _serialize_job(jobs_by_id[jid],
+                       distance_m=float(distance_map[jid]) if distance_map[jid] is not None else None,
+                       thumbnail=thumbs.get(jid))
+        for jid in job_ids
+    ]
+    return {"items": items, "total": total, "page": page, "size": size}
+
+
+@router.get("/{job_id}")
+def get_job(job_id: int, session: Session = Depends(get_session)):
+    """Public detail. Increments view_count and includes all images."""
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    job.view_count += 1
+    session.add(job)
+    session.commit()
+    session.refresh(job)
+
+    images = session.exec(
+        select(JobImage)
+        .where(JobImage.job_id == job_id)
+        .order_by(col(JobImage.sort_order))
+    ).all()
+
+    data = _serialize_job(job)
+    data["images"] = [
+        {
+            "id": img.id,
+            "stored_path": img.stored_path,
+            "original_name": img.original_name,
+            "file_size": img.file_size,
+            "sort_order": img.sort_order,
+        }
+        for img in images
+    ]
+    return data
