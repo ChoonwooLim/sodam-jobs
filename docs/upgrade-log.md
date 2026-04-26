@@ -6,3 +6,5 @@
 | 2026-04-26 | 백엔드 8 라우터 (auth/admin/boards/comments/files/docs/skills/plugins) | feat | `backend/routers/*` |
 | 2026-04-26 | 프론트엔드 16 페이지 + Architectural Futurism 디자인 시스템 | feat | `frontend/src/**/*` |
 | 2026-04-26 | 멀티스테이지 Dockerfile + Orbitron.yaml | infra | `Dockerfile`, `Orbitron.yaml` |
+| 2026-04-26 | M4a — Job CRUD + JobImage + PostGIS 거리 검색 + employer 역할 (4 프론트 페이지, 3 컴포넌트, 8 endpoint) | feat | `backend/{models,routers}/job*`, `backend/main.py`, `frontend/src/pages/jobs/*`, `frontend/src/components/jobs/*` |
+| 2026-04-26 | Orbitron PG 컨테이너를 `postgis/postgis:15-3.5-alpine`으로 교체 (drop-in, 기존 volume 보존) | infra | (Orbitron 호스트 docker run) |
