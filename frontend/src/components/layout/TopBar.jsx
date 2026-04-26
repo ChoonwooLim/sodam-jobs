@@ -49,7 +49,7 @@ export default function TopBar() {
           )}
           {user && (user.role === "employer" || user.role === "admin" || user.role === "superadmin") && (
             <Link to="/my/jobs" className={`${styles.navLink} ${isActive("/my/jobs") ? styles.active : ""}`} onClick={() => setMenuOpen(false)}>
-              내 알바
+              내 구인
             </Link>
           )}
         </nav>

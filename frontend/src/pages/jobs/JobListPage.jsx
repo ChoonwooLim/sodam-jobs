@@ -73,7 +73,7 @@ export default function JobListPage() {
           )}
         </div>
         {canPost && (
-          <Link to="/jobs/new" className={styles.postBtn}>알바 등록</Link>
+          <Link to="/jobs/new" className={styles.postBtn}>구인 등록</Link>
         )}
       </div>
 

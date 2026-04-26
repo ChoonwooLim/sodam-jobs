@@ -38,14 +38,14 @@ export default function MyJobsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>내가 등록한 알바</h1>
-        <Link to="/jobs/new" className={styles.postBtn}>새 알바 등록</Link>
+        <h1 className={styles.title}>내가 등록한 구인</h1>
+        <Link to="/jobs/new" className={styles.postBtn}>새 구인 등록</Link>
       </div>
 
       {loading ? (
         <p className={styles.empty}>불러오는 중...</p>
       ) : jobs.length === 0 ? (
-        <p className={styles.empty}>등록한 알바가 없습니다.</p>
+        <p className={styles.empty}>등록한 구인이 없습니다.</p>
       ) : (
         <table className={styles.table}>
           <thead>

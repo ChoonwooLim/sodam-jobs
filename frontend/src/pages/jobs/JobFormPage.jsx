@@ -129,7 +129,7 @@ export default function JobFormPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>{isEdit ? "알바 수정" : "알바 등록"}</h1>
+      <h1 className={styles.title}>{isEdit ? "구인 수정" : "구인 등록"}</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.field}>
