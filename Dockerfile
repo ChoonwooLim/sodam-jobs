@@ -32,8 +32,12 @@ ENV SECRET_KEY=sodamjobs-jwt-secret-key-2026
 ENV FRONTEND_URL=https://sodam-jobs.twinverse.org
 ENV UPLOAD_DIR=/app/uploads
 
+# Unbuffered stdout/stderr so print()/log lines appear immediately in `docker logs`
+ENV PYTHONUNBUFFERED=1
+
 RUN mkdir -p /app/uploads
 VOLUME ["/app/uploads"]
 
+# Honor Orbitron's $PORT injection (e.g., 3374). Falls back to 8000 for local Docker runs.
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
