@@ -42,3 +42,13 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
     if user.role not in ("admin", "superadmin"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
     return user
+
+
+def require_employer(user: User = Depends(get_current_user)) -> User:
+    """Allow employer / admin / superadmin. Used by Job write endpoints."""
+    if user.role not in ("employer", "admin", "superadmin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Employer or admin access required",
+        )
+    return user
