@@ -330,3 +330,89 @@ def delete_job(
     session.delete(job)
     session.commit()
     return {"status": "deleted"}
+
+
+MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+
+
+@router.post("/{job_id}/images", status_code=201)
+async def upload_job_image(
+    job_id: int,
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    _check_owner_or_admin(job, user)
+
+    ext = Path(file.filename or "").suffix.lower()
+    if ext not in IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image type: {ext}. Allowed: {sorted(IMAGE_EXTENSIONS)}",
+        )
+
+    content = await file.read()
+    if len(content) > MAX_IMAGE_SIZE:
+        raise HTTPException(status_code=400, detail="Image too large. Max 10MB")
+
+    stored_name = f"{uuid.uuid4()}{ext}"
+    JOB_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    stored_path_disk = JOB_UPLOAD_DIR / stored_name
+    with open(stored_path_disk, "wb") as f:
+        f.write(content)
+
+    max_order = session.exec(
+        select(func.coalesce(func.max(JobImage.sort_order), -1))
+        .where(JobImage.job_id == job_id)
+    ).one()
+
+    record = JobImage(
+        job_id=job_id,
+        stored_path=f"/uploads/{stored_name}",
+        original_name=file.filename or "unknown",
+        file_size=len(content),
+        sort_order=int(max_order) + 1,
+    )
+    session.add(record)
+    session.commit()
+    session.refresh(record)
+    return {
+        "id": record.id,
+        "stored_path": record.stored_path,
+        "original_name": record.original_name,
+        "file_size": record.file_size,
+        "sort_order": record.sort_order,
+    }
+
+
+@router.delete("/{job_id}/images/{image_id}")
+def delete_job_image(
+    job_id: int,
+    image_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    _check_owner_or_admin(job, user)
+
+    img = session.get(JobImage, image_id)
+    if not img or img.job_id != job_id:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    filename = Path(img.stored_path).name
+    disk_path = JOB_UPLOAD_DIR / filename
+    if disk_path.is_file():
+        try:
+            disk_path.unlink()
+        except OSError as e:
+            print(f"[jobs.delete_image] could not unlink {disk_path}: {e}")
+
+    session.delete(img)
+    session.commit()
+    return {"status": "deleted"}
