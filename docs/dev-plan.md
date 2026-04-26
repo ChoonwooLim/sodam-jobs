@@ -15,6 +15,7 @@
 | M2 | 어드민 대시보드 (사용자/게시판/문서/스킬/플러그인 관리) | 완료 |
 | M3 | 커뮤니티 게시판 4종 (공지/Q&A/갤러리/동영상) | 완료 |
 | M4a | Job CRUD + JobImage + 거리 검색 + employer 역할 | 완료 |
+| M-Mobile | 모바일 퍼스트 재설계 (MobileShell + BottomNav + PageHeader + PWA basic + 셈하나 크로스프로모) | 진행 중 (Batch 1/10 — worktree `m-mobile`) |
 | M4b | Application 상태 머신 + 마이페이지 | 예정 |
 | M4c | 양방향 Review + 동시 공개 + 사업장 평점 | 예정 |
 | M5 | 지역 기반 매칭 고도화 (지도 위젯, 검색 fine-tuning) | 예정 |
@@ -39,12 +40,11 @@
 | 1:1 채팅 | 예정 | M6 |
 | 안심 사업장 검증 | 예정 | M7 |
 
-## 다음 단계 (M4b — Application 상태 머신)
-1. `Application` 모델: Job ↔ User N:M, 6 상태 머신(pending/accepted/withdrawn/completed/no_show/rejected)
-2. 알바생 마이페이지 (지원한 알바 목록, 상태별 필터)
-3. 사장님 마이페이지 (지원자 관리, 수락/거절/완료/노쇼 표시)
-4. `JobDetailPage`의 "지원하기" 버튼 활성화
+## 다음 단계 (M-Mobile — 모바일 퍼스트 재설계)
 
+진행 중: worktree `c:/WORK/sodam-jobs-m-mobile` (브랜치 `m-mobile`), Batch 1 완료(2 commits — externalLinks/SemhanaLink/PageHeader). Batch 2-10 (BottomNav + DesktopSidePanel, Footer + MobileShell, PWA, 백엔드 /me, 9 페이지 재작성, ProfilePage/ChatPlaceholder, E2E 검증)이 다음 세션에서 이어짐.
+
+이후 M4b: Application 상태 머신 + 마이페이지 (모바일 셸 위에서 처음부터 모바일 퍼스트로 설계)
 이후 M4c: 양방향 Review + 동시 공개 시스템
 
 ## 완료된 단계 (M4a)
