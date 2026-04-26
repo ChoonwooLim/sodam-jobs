@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlmodel import Session, select
@@ -18,6 +20,7 @@ class RegisterRequest(BaseModel):
     username: str
     email: str
     password: str
+    role: Literal["user", "employer"] = "user"
 
 
 class TokenResponse(BaseModel):
@@ -49,6 +52,7 @@ def register(body: RegisterRequest, session: Session = Depends(get_session)):
         username=body.username,
         email=body.email,
         hashed_password=hash_password(body.password),
+        role=body.role,
     )
     session.add(user)
     session.commit()

@@ -57,7 +57,7 @@ def update_user_role(
     admin: User = Depends(require_admin),
     session: Session = Depends(get_session),
 ):
-    if body.role not in ("user", "admin", "superadmin"):
+    if body.role not in ("user", "employer", "admin", "superadmin"):
         raise HTTPException(status_code=400, detail="Invalid role")
     user = session.get(User, user_id)
     if not user:
