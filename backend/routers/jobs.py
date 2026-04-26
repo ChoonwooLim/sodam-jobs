@@ -39,6 +39,22 @@ class JobCreate(BaseModel):
     ends_at: Optional[datetime] = None
 
 
+class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    business_name: Optional[str] = None
+    address: Optional[str] = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    pay_type: Optional[Literal["hourly", "daily", "monthly"]] = None
+    pay_amount: Optional[int] = None
+    category: Optional[Literal["hall", "kitchen", "cvs", "cafe", "delivery", "etc"]] = None
+    starts_at: Optional[datetime] = None
+    ends_at: Optional[datetime] = None
+    status: Optional[Literal["active", "closed", "expired"]] = None
+    is_verified: Optional[bool] = None  # ignored unless caller is admin/superadmin
+
+
 def _to_point(lng: float, lat: float) -> WKTElement:
     """Build a PostGIS POINT in WGS84 (SRID 4326). Note: PostGIS expects lng then lat."""
     return WKTElement(f"POINT({lng} {lat})", srid=4326)
@@ -246,3 +262,71 @@ def get_job(job_id: int, session: Session = Depends(get_session)):
         for img in images
     ]
     return data
+
+
+def _check_owner_or_admin(job: Job, user: User):
+    if job.employer_id != user.id and user.role not in ("admin", "superadmin"):
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+
+@router.put("/{job_id}")
+def update_job(
+    job_id: int,
+    body: JobUpdate,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    _check_owner_or_admin(job, user)
+
+    data = body.model_dump(exclude_unset=True)
+
+    if "is_verified" in data and user.role not in ("admin", "superadmin"):
+        data.pop("is_verified")
+
+    new_lat = data.pop("lat", None)
+    new_lng = data.pop("lng", None)
+    if new_lat is not None or new_lng is not None:
+        if new_lat is None or new_lng is None:
+            raise HTTPException(status_code=400, detail="lat and lng must be provided together")
+        job.location = _to_point(new_lng, new_lat)
+
+    for field, value in data.items():
+        setattr(job, field, value)
+    job.updated_at = datetime.now()
+
+    session.add(job)
+    session.commit()
+    session.refresh(job)
+    return {"id": job.id, "title": job.title, "status": job.status}
+
+
+@router.delete("/{job_id}")
+def delete_job(
+    job_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    _check_owner_or_admin(job, user)
+
+    images = session.exec(select(JobImage).where(JobImage.job_id == job_id)).all()
+    for img in images:
+        # stored_path is "/uploads/<filename>"; resolve to disk path via JOB_UPLOAD_DIR
+        # (defined at module top in sub-task 8)
+        filename = Path(img.stored_path).name
+        disk_path = JOB_UPLOAD_DIR / filename
+        if disk_path.is_file():
+            try:
+                disk_path.unlink()
+            except OSError as e:
+                print(f"[jobs.delete] could not unlink {disk_path}: {e}")
+        session.delete(img)
+
+    session.delete(job)
+    session.commit()
+    return {"status": "deleted"}
