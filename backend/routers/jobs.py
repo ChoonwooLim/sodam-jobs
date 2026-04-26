@@ -16,9 +16,10 @@ from deps import get_current_user, require_employer
 
 router = APIRouter()
 
-# Upload directory — same resolution as routers/files.py (handles UPLOAD_DIR="" gotcha)
+# Upload directory — must match main._get_uploads_dir() (project_root/uploads).
+# Note: __file__ is backend/routers/jobs.py, so 3 levels up = project root.
 _env_upload = os.getenv("UPLOAD_DIR", "").strip()
-JOB_UPLOAD_DIR = Path(_env_upload) if _env_upload else Path(__file__).resolve().parent.parent / "uploads"
+JOB_UPLOAD_DIR = Path(_env_upload) if _env_upload else Path(__file__).resolve().parent.parent.parent / "uploads"
 
 VALID_PAY_TYPES = ("hourly", "daily", "monthly")
 VALID_CATEGORIES = ("hall", "kitchen", "cvs", "cafe", "delivery", "etc")
