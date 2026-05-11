@@ -74,3 +74,58 @@
 - 환경변수: 사용자가 Orbitron 대시보드에 4개(DATABASE_URL/SECRET_KEY/SUPERADMIN_PASSWORD/FRONTEND_URL) 입력해야 보안적으로 완전. 미입력 시에도 Dockerfile 기본값으로 동작은 함 (단 SECRET_KEY는 약함).
 
 ---
+
+## 2026-05-11 — F-시리즈 외국인 sub-app 계획 (Capa Work 풀스택 클론)
+
+### 작업 요약
+
+| 카테고리 | 작업 내용 | 상태 |
+|----------|----------|------|
+| docs | F-시리즈 7-cycle 분해안 합의 (F1 foreign-shell → F7 polish, ~9주) | 완료 |
+| docs | F1 디자인 spec 작성 + self-review 2회 + 사용자 위임 기본값 5항목 확정 | 완료 |
+| docs | F1 구현 plan 14 task / 48h 작성 (TDD-light = build + smoke, M4a 패턴) | 완료 |
+
+### 세부 내용
+
+- 사용자 요청: capawork.com 분석 + sodam-jobs 안에 "외국인 전용 구인" 메뉴 별도 구성 + Capa Work 서비스 전부 클론.
+- WebFetch가 SPA 본문 미수신 → WebSearch로 우회 분석. Capa Work = 외국인(E-7/E-9 중심) 채용 플랫폼, KO/EN/RU 다국어, 비자/언어/직종 자동 매칭, capa.ai 별도 브랜드.
+- 단일 spec 불가능한 multi-month 규모 → **7-cycle 분해**:
+  - F1 foreign-shell (1.5주) — 셸·라우팅·i18n
+  - F2 foreign-jobs (2주) — ForeignJob 모델/CRUD/필터
+  - F3 foreign-employer (1주)
+  - F4 foreign-seeker (1주)
+  - F5 foreign-matching (2주)
+  - F6 foreign-content (1주)
+  - F7 foreign-polish (1주)
+- F1 핵심 결정 6건 합의:
+  - sodam과의 관계 = (b) 한 지붕 두 상품 sub-app
+  - i18n URL = `/foreign/:lang/*` 경로 접두사 (ko/en/ru)
+  - 라이브러리 = react-i18next + react-helmet-async
+  - 시각 정체성 = 토큰 공유 + `.foreign-scope` 컬러 팔레트만 분리 (사파이어 + 청록)
+  - 인증 = 완전 공유 (백엔드 변경 0)
+  - 진입점 = 본가 TopBar 메뉴 + HomeForeignBanner + sub-app TopBar 본가 복귀 링크
+- 완성도 = 옵션 2 (반쯤 완성, KO/EN 전수, RU 핵심만), 배포 = feature flag `VITE_FOREIGN_SUBAPP_VISIBLE` (기본 false)
+- 사용자 위임 기본값 5건:
+  - 운영주체 = 브랜드명 "SodamJobs Global"만 (법인명 미배치)
+  - 약관·개인정보 = 본가에도 없으므로 `href="#"` placeholder (별도 cycle)
+  - 환경변수 = `VITE_FOREIGN_SUBAPP_VISIBLE`
+  - F1 착수 시점 = 2026-05-25 (M-Mobile 종료 후), F1 종료 ~ 2026-06-05
+  - 구현 중 자잘한 결정(i18n 톤, 컴포넌트 명명, 로깅, 일러스트 톤, 404 처리) 자동 처리 원칙
+- F1 spec self-review에서 3건 수정: I18nProvider 가짜 wrapper 제거, Pretendard 폰트 모순 해소, TopBar 파일 확정.
+- F1 plan = 14 task / 48h. T1 의존성 → T14 backend Cache-Control + smoke. 모든 task에 inline 코드 + 정확 경로 + commit 메시지 포함.
+- 실행 모드는 사용자가 F1 착수 시점에 선택 (subagent-driven 추천 / inline 둘 다 가능).
+
+### 산출물
+
+- `docs/superpowers/specs/2026-05-11-foreign-subapp-f1-design.md` (~30KB, 9 섹션)
+- `docs/superpowers/plans/2026-05-11-foreign-subapp-f1.md` (~50KB, 14 task)
+- 커밋 `18ef34b` / `372eef6` / `fdc9998` / `577f025` — 모두 main 브랜치
+
+### 다음 세션 인계
+
+- **최우선**: M-Mobile Batch 2 (worktree `c:/WORK/sodam-jobs-m-mobile`, 브랜치 `m-mobile`) — BottomNav + DesktopSidePanel
+- M-Mobile Batch 2-10 완료 후 (~2주 추정, 2026-05-25 무렵) F1 plan 실행 착수
+- F1 실행 시 worktree 권장: `c:/WORK/sodam-jobs-foreign-f1` (브랜치 `foreign-f1`), spec/plan은 main에 이미 커밋됨
+- F1 실행 전 사용자 결정 필요: 실행 모드(subagent-driven vs inline) — 추천 = subagent-driven (M4a 검증된 패턴)
+
+---

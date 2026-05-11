@@ -21,6 +21,14 @@
 | M5 | 지역 기반 매칭 고도화 (지도 위젯, 검색 fine-tuning) | 예정 |
 | M6 | 사장님 ↔ 알바생 1:1 채팅 | 예정 |
 | M7 | SodamFN 안심 사업장 인증 시스템 | 예정 |
+| **F-시리즈** | **외국인 sub-app (Capa Work 풀스택 클론) — 7 cycle, ~9주** | **계획 완료 (spec+plan), 착수 = M-Mobile 종료 후** |
+| F1 | foreign-shell — `/foreign/:lang/*` 라우팅 + i18n(KO/EN/RU) + 셸 + 14 라우트(4 완성 + 8 placeholder) | 계획 완료 (spec/plan 커밋) |
+| F2 | foreign-jobs — ForeignJob 모델(비자/한국어/언어) + CRUD + 리스트/상세/등록/필터 | 예정 |
+| F3 | foreign-employer — 외국인 채용 employer 온보딩 + 회사 프로필 + 공고 관리 | 예정 |
+| F4 | foreign-seeker — 외국인 구직자 프로필(ForeignSeekerProfile) + 이력서 + 지원/저장 + 받은 매칭 | 예정 |
+| F5 | foreign-matching — 자동 매칭 엔진(비자/언어/직종 점수화) + 추천 카드 + 알림 | 예정 |
+| F6 | foreign-content — 뉴스룸 + 비자 가이드 + 한국 생활 가이드 (admin CMS) | 예정 |
+| F7 | foreign-polish — RU 검수 + 모바일 최적화 + 시드 데이터 + 다크모드 평가 + 배포 노출 ON | 예정 |
 
 ## 기능 목록
 
@@ -46,6 +54,15 @@
 
 이후 M4b: Application 상태 머신 + 마이페이지 (모바일 셸 위에서 처음부터 모바일 퍼스트로 설계)
 이후 M4c: 양방향 Review + 동시 공개 시스템
+
+## F-시리즈 (외국인 sub-app — Capa Work 풀스택 클론)
+
+**상태**: 계획 완료 (2026-05-11), 착수 = M-Mobile 종료 후 (~2026-05-25).
+
+- spec: `docs/superpowers/specs/2026-05-11-foreign-subapp-f1-design.md`
+- plan: `docs/superpowers/plans/2026-05-11-foreign-subapp-f1.md` (F1만)
+- 핵심 결정: (b) sub-app, `/foreign/:lang/*`, react-i18next, 토큰 공유 + 컬러 분리, 인증 공유, feature flag `VITE_FOREIGN_SUBAPP_VISIBLE`
+- F1만 plan화. F2-F7은 F1 완료 후 각 cycle 시작 시 별도 spec/plan 사이클
 
 ## 완료된 단계 (M4a)
 - `Job` 모델: 사업장명/위치(PostGIS Geography POINT 4326)/급여/카테고리/모집기간
