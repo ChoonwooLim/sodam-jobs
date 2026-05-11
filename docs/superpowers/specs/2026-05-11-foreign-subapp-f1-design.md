@@ -50,42 +50,52 @@
 
 기존 단일 `MainLayout` → **두 레이아웃 병렬** 구조로 전환.
 
-```jsx
-<BrowserRouter>
-  <HelmetProvider>
-    <I18nProvider>
-      <Routes>
-        {/* 본가 sodam-jobs — 기존 27개 라우트 그대로 */}
-        <Route element={<MainLayout />}>
-          ...
-        </Route>
+`main.jsx`에 `import './i18n/config'` 1줄 추가 (i18n은 side-effect로 초기화, 별도 Provider 불필요 — react-i18next는 `initReactI18next` 호출 이후 `useTranslation` 훅이 어디서나 동작).
 
-        {/* 외국인 sub-app */}
-        <Route path="/foreign" element={<ForeignEntryRedirect />} />
-        <Route
-          path="/foreign/:lang"
-          element={<ForeignLangGate><ForeignLayout /></ForeignLangGate>}
-        >
-          <Route index element={<ForeignHomePage />} />
-          <Route path="about" element={<ForeignAboutPage />} />
-          <Route path="login" element={<ForeignLoginPage />} />
-          <Route path="signup" element={<ForeignSignupPage />} />
-          <Route path="jobs" element={<ForeignJobsPlaceholder />} />
-          <Route path="jobs/:id" element={<ForeignJobsPlaceholder />} />
-          <Route path="employer" element={<ForeignEmployerPlaceholder />} />
-          <Route path="employer/jobs/new" element={<ForeignEmployerPlaceholder />} />
-          <Route path="employer/me" element={<ForeignEmployerPlaceholder />} />
-          <Route path="me" element={<ForeignSeekerPlaceholder />} />
-          <Route path="matching" element={<ForeignMatchingPlaceholder />} />
-          <Route path="news" element={<ForeignNewsPlaceholder />} />
-          <Route path="news/:slug" element={<ForeignNewsPlaceholder />} />
-          <Route path="visa-guide" element={<ForeignVisaGuidePlaceholder />} />
-          <Route path="life-guide" element={<ForeignLifeGuidePlaceholder />} />
-          <Route path="*" element={<ForeignNotFound />} />
-        </Route>
-      </Routes>
-    </I18nProvider>
+```jsx
+// main.jsx
+import './i18n/config';
+import { HelmetProvider } from 'react-helmet-async';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <HelmetProvider>
+    <App />
   </HelmetProvider>
+);
+
+// App.jsx
+<BrowserRouter>
+  <Routes>
+    {/* 본가 sodam-jobs — 기존 27개 라우트 그대로 */}
+    <Route element={<MainLayout />}>
+      ...
+    </Route>
+
+    {/* 외국인 sub-app */}
+    <Route path="/foreign" element={<ForeignEntryRedirect />} />
+    <Route
+      path="/foreign/:lang"
+      element={<ForeignLangGate><ForeignLayout /></ForeignLangGate>}
+    >
+      <Route index element={<ForeignHomePage />} />
+      <Route path="about" element={<ForeignAboutPage />} />
+      <Route path="login" element={<ForeignLoginPage />} />
+      <Route path="signup" element={<ForeignSignupPage />} />
+      <Route path="jobs" element={<ForeignJobsPlaceholder />} />
+      <Route path="jobs/:id" element={<ForeignJobsPlaceholder />} />
+      <Route path="employer" element={<ForeignEmployerPlaceholder />} />
+      <Route path="employer/jobs/new" element={<ForeignEmployerPlaceholder />} />
+      <Route path="employer/me" element={<ForeignEmployerPlaceholder />} />
+      <Route path="me" element={<ForeignSeekerPlaceholder />} />
+      <Route path="matching" element={<ForeignMatchingPlaceholder />} />
+      <Route path="news" element={<ForeignNewsPlaceholder />} />
+      <Route path="news/:slug" element={<ForeignNewsPlaceholder />} />
+      <Route path="visa-guide" element={<ForeignVisaGuidePlaceholder />} />
+      <Route path="life-guide" element={<ForeignLifeGuidePlaceholder />} />
+      <Route path="*" element={<ForeignNotFound />} />
+    </Route>
+  </Routes>
 </BrowserRouter>
 ```
 
@@ -572,10 +582,11 @@ function ForeignEntryRedirect() {
 
 | 파일 | 변경 |
 |------|------|
-| `components/layout/MainLayout.jsx` (또는 TopBar 컴포넌트) | 메뉴 항목 1개 + 모바일 햄버거 1개 (flag 게이트) |
+| `components/layout/TopBar.jsx` | 메뉴 항목 1개 + 모바일 햄버거 1개 (flag 게이트) |
 | `pages/HomePage.jsx` | `<HomeForeignBanner />` 1줄 (flag 게이트) |
 | `components/foreign/HomeForeignBanner.jsx` (신규) | 본가에서 import |
-| `App.jsx` | `/foreign`, `/foreign/:lang/*` 라우트 추가 + `HelmetProvider` + `i18n` import |
+| `App.jsx` | `/foreign`, `/foreign/:lang/*` 라우트 추가 |
+| `main.jsx` | `import './i18n/config'` + `HelmetProvider` 래핑 |
 
 본가 페이지 다른 곳(About/Services/Login/Community/Jobs/Admin)은 건드리지 않음.
 
