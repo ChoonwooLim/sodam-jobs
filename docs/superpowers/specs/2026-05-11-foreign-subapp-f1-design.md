@@ -751,12 +751,44 @@ F1 종료 시 다음 cycle(F2 foreign-jobs)이 즉시 활용:
 
 ---
 
-## 9. 사용자 확인 사항 (구현 착수 전)
+## 9. 합의된 기본값 (사용자 위임 결정)
 
-- [ ] 운영 법인명 — `ForeignAboutPage`의 "운영주체" 표기
-- [ ] 본가 약관 페이지 URL 존재 여부 (없으면 F1 placeholder 또는 별도 cycle)
-- [ ] `FOREIGN_SUBAPP_VISIBLE` 환경변수 명명 컨벤션 확인 (Vite는 `VITE_` 접두사 필요)
-- [ ] M-Mobile 사이클 종료 시점 — F1 착수 정확 일자
+사용자가 "합리적·효율적으로 알아서 처리"를 요청 → 다음 기본값으로 확정. 후속 cycle에서 사용자 입력 시 갱신.
+
+### 9.1 운영주체 표기
+
+법인명 미확정 → `ForeignAboutPage`의 "운영주체"엔 **브랜드명만** 사용 (`SodamJobs Global` — sub-app 브랜드, `sodam-jobs` 본가의 외국인 확장). 법인명·주소·대표자명 등 사업자정보 블록은 F1엔 두지 않음. 향후 사업자등록증 정보 확정 시 한 줄 추가.
+
+### 9.2 약관·개인정보 처리
+
+본가에도 실제 약관·개인정보 페이지가 없음(Footer는 `href="#"` placeholder). → **F1 범위 변경**:
+- sub-app Footer의 "이용약관 / 개인정보처리방침" 링크도 본가와 동일하게 `href="#"` placeholder (i18n 텍스트만 번역)
+- 약관·개인정보 페이지 작성은 sodam-jobs 전사 차원의 별도 cycle (F-시리즈와 무관)
+- 회원가입 시 약관 동의 체크박스는 표시하되, 본가 흐름 그대로 사용 (백엔드 변경 없음)
+- Section 5.2 `ForeignAboutPage`의 "약관·개인정보 본가 재사용" 문구는 **"향후 본가에 추가 시 자동 재사용"으로 의도 유지**
+
+### 9.3 환경변수 명명
+
+Vite는 클라이언트 노출 env에 `VITE_` 접두사 필요 → 최종 확정: **`VITE_FOREIGN_SUBAPP_VISIBLE`**
+
+- 로컬 `.env`: `VITE_FOREIGN_SUBAPP_VISIBLE=true` (개발 시 메뉴/배너 모두 노출, 작업 시각 확인)
+- Orbitron 운영: 환경변수 미설정(기본 false) — F2 완료 후 true로 전환 평가
+- 사용처: `import.meta.env.VITE_FOREIGN_SUBAPP_VISIBLE === 'true'` (문자열 비교, env는 모두 string)
+
+### 9.4 F1 착수 시점
+
+M-Mobile 진척: Batch 1 commit `90e4fd0` 완료, Batch 2-10 잔여 → 약 2주 추정. F1 잠정 착수일 **2026-05-25 무렵**, M-Mobile 실제 완료일에 맞춰 자동 조정. F1 자체 소요 1.5주 → F1 종료 **2026-06-05 무렵** 예상.
+
+### 9.5 추가 위임 결정 (구현 중 발견 항목 대응 원칙)
+
+구현 중 사용자 결정이 필요한 자잘한 항목은 다음 원칙으로 자동 처리:
+- **i18n 카피 톤**: KO는 정중·실용 톤(존댓말), EN은 직설·간결, RU는 공식·정중
+- **새 컴포넌트 명명**: `Foreign*` 접두사 강제
+- **로깅·디버그**: `console.warn`은 missing translation 키만, 그 외 디버그 로그 production에 남기지 않음
+- **placeholder 일러스트**: SVG inline, 무채색 + foreign accent 단색 1회 사용
+- **404 처리**: `/foreign/:lang/존재하지않는경로` → `ForeignNotFound`, `/foreign/존재하지않는언어/...` → `/foreign/ko/...` 리다이렉트(lang 게이트가 처리)
+
+위 5항목은 F1 plan 작성·구현 시 묻지 않고 진행.
 
 ---
 
